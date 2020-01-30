@@ -162,5 +162,6 @@ def runAlgo(x):
 lenDataset = len(X.columns)
 for x in range(7):
   X.drop(X.columns[x], axis=1)
+  print(datetime.now() + "Start Runde " + x)
   runAlgo(x)
   X = X_default
