@@ -123,9 +123,9 @@ def runAlgo(x):
                           "classifier__learning_rate": uniform.rvs(0.0001, 0.1, size=10),
                           "classifier__gamma" : uniform.rvs(0, 2, size=10),
                           "classifier__max_depth": randint.rvs(2, 100, size=10),
-                          "classifier__colsample_bytree": uniform.rvs(0.1, 1, size=10),
-                          "classifier__subsample": uniform.rvs(0.1, 1, size=10),
-                          "classifier__reg_alpha": uniform.rvs(0, 1, size=10),
+                          "classifier__colsample_bytree": uniform.rvs(0.1, 0.9, size=10),
+                          "classifier__subsample": uniform.rvs(0.1, 0.9, size=10),
+                          "classifier__reg_alpha": uniform.rvs(0, 0.9, size=10),
                           "classifier__reg_lambda": uniform.rvs(0.0001, 5, size=10),
                           "classifier__min_child_weight": randint.rvs(1, 7, size=10),
                           "classifier__n_estimators": randint.rvs(100, 1000, size=10)
@@ -162,6 +162,6 @@ def runAlgo(x):
 lenDataset = len(X.columns)
 for x in range(7):
   X.drop(X.columns[x], axis=1)
-  print(datetime.now(), "Start Runde ", x)
+  print(datetime.now(), "Start Runde " , x)
   runAlgo(x)
   X = X_default
