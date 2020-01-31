@@ -72,6 +72,23 @@ dataset.dateWeekday = dataset['dateWeekday'].dt.day_name()
 dataset.dateWeekendDay = dataset.dateWeekendDay.apply(getWeekendDay)
 dataset.ageGroups = dataset.ageGroups.apply(getAgeGroups)
 
+allFeatures = [ ['dateYear', 'categorial', 0]
+                ,['dateMonth', 'categorial', 1]
+                ,['dateWeekday', 'categorial', 2]
+                ,['ageGroups', 'categorial', 3]
+                ,['marital_status', 'categorial', 4]
+                ,['education', 'categorial', 5]
+                ,['job', 'categorial', 6]
+                ,['credit_default', 'categorial', 7]
+                ,['housing_loan', 'categorial', 8]
+                ,['personal_loan', 'categorial', 9]
+                ,['communication_type', 'categorial', 10]
+                ,['n_contacts_campaign', 'numeric', 0]
+                ,['days_since_last_contact', 'numeric', 1]
+                ,['n_contacts_before', 'numeric', 2]
+                ,['previous_conversion', 'categorial', 11]
+                ,['duration', 'numeric', 3]]
+
 """## Model, Pipeline and Scoring Initialization"""
 
 X_default = dataset[['dateYear', 'dateMonth', 'dateWeekday', 'ageGroups', 'marital_status', 'education', 'job', 'credit_default', 'housing_loan', 'personal_loan', 'communication_type', 'n_contacts_campaign', 'days_since_last_contact', 'n_contacts_before', 'previous_conversion', 'duration']]
@@ -112,6 +129,9 @@ pipeline = Pipeline([
     ('classifier', classifier)
 ])
 
+default_categorical_features = categorical_features
+default_numeric_features = numeric_features
+
 param_distributions = {}
 def runAlgo(x):
   global param_distributions
@@ -119,19 +139,40 @@ def runAlgo(x):
   x_rscv = StratifiedKFold(n_splits=10, shuffle=True, random_state=x_random_state)
   x_rscv = x_rscv.split(X, y)
 
+  categorical_features = default_categorical_features
+  numeric_features = default_numeric_features
+
+  if(allFeatures[x][1] == 'categorial'):
+    categorical_features.remove(allFeatures[x][0])
+  else:
+    numeric_features.remove(allFeatures[x][0])
+
+#  param_distributions = {
+#                          "classifier__learning_rate": uniform.rvs(0.0001, 0.1, size=10),
+#                          "classifier__gamma" : uniform.rvs(0, 2, size=10),
+#                          "classifier__max_depth": randint.rvs(2, 100, size=10),
+#                          "classifier__colsample_bytree": uniform.rvs(0.1, 0.9, size=10),
+#                          "classifier__subsample": uniform.rvs(0.1, 0.9, size=10),
+#                          "classifier__reg_alpha": uniform.rvs(0, 0.9, size=10),
+#                          "classifier__reg_lambda": uniform.rvs(0.0001, 5, size=10),
+#                          "classifier__min_child_weight": randint.rvs(1, 7, size=10),
+#                          "classifier__n_estimators": randint.rvs(100, 1000, size=10)
+#                        }
+
   param_distributions = {
-                          "classifier__learning_rate": uniform.rvs(0.0001, 0.1, size=10),
-                          "classifier__gamma" : uniform.rvs(0, 2, size=10),
-                          "classifier__max_depth": randint.rvs(2, 100, size=10),
-                          "classifier__colsample_bytree": uniform.rvs(0.1, 0.9, size=10),
-                          "classifier__subsample": uniform.rvs(0.1, 0.9, size=10),
-                          "classifier__reg_alpha": uniform.rvs(0, 0.9, size=10),
-                          "classifier__reg_lambda": uniform.rvs(0.0001, 5, size=10),
-                          "classifier__min_child_weight": randint.rvs(1, 7, size=10),
-                          "classifier__n_estimators": randint.rvs(100, 1000, size=10)
+                          "classifier__learning_rate": [0.00983846188493304],
+                          "classifier__gamma" : [0.230465169212197],
+                          "classifier__max_depth": [65],
+                          "classifier__colsample_bytree": [0.76419768106336],
+                          "classifier__subsample": [0.977764292950417],
+                          "classifier__reg_alpha": [0.207477052755299],
+                          "classifier__reg_lambda": [2.40755160892487],
+                          "classifier__min_child_weight": [6],
+                          "classifier__n_estimators": [922]
                         }
+
   search = RandomizedSearchCV(
-    pipeline, param_distributions=param_distributions, n_iter=3, scoring=scorer, 
+    pipeline, param_distributions=param_distributions, n_iter=1, scoring=scorer, 
     n_jobs=-1, cv=x_rscv, random_state=x_random_state, return_train_score=True)
   
   search = search.fit(X, y)
@@ -155,13 +196,14 @@ def runAlgo(x):
               ,search.cv_results_['std_train_score'][search.best_index_]
               ,search.cv_results_['std_test_score'][search.best_index_]
               ,x]]
-  with open('log.csv', 'a') as csvfile:
+  with open('/content/drive/My Drive/log2.csv', 'a') as csvfile:
     writer = csv.writer(csvfile, delimiter=';')
     writer.writerows(logData)
 
 lenDataset = len(X.columns)
-for x in range(7, lenDataset - 1):
-  X.drop(X.columns[x], axis=1)
-  print(datetime.now(), "Start Runde " , x, " von ", lenDataset)
+for x in range(0, lenDataset):
+  X = X.drop(X.columns[x], axis=1)
+  X.head(5)
+  print(datetime.now(), "Start Runde " , x, " von ", lenDataset - 1)
   runAlgo(x)
   X = X_default
