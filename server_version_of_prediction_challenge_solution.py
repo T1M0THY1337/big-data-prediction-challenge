@@ -160,8 +160,8 @@ def runAlgo(x):
     writer.writerows(logData)
 
 lenDataset = len(X.columns)
-for x in range(7):
+for x in range(7, lenDataset - 1):
   X.drop(X.columns[x], axis=1)
-  print(datetime.now(), "Start Runde " , x)
+  print(datetime.now(), "Start Runde " , x, " von ", lenDataset)
   runAlgo(x)
   X = X_default
