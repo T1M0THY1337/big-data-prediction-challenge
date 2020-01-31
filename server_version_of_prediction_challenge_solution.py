@@ -196,7 +196,7 @@ def runAlgo(x):
               ,search.cv_results_['std_train_score'][search.best_index_]
               ,search.cv_results_['std_test_score'][search.best_index_]
               ,x]]
-  with open('/content/drive/My Drive/log2.csv', 'a') as csvfile:
+  with open('log2.csv', 'a') as csvfile:
     writer = csv.writer(csvfile, delimiter=';')
     writer.writerows(logData)
 
