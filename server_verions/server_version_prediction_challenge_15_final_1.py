@@ -12,8 +12,6 @@ import pandas as pd
 import xgboost as xgb
 import sys as sys
 import csv, datetime
-import seaborn as sns
-import matplotlib.pyplot as plt
 from datetime import datetime
 from scipy.stats import uniform, randint
 from sklearn.compose import ColumnTransformer
