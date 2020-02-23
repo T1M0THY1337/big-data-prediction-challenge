@@ -137,15 +137,6 @@ x_rscv_n_iter = 20
 # or enrich the dataset with features from datasets.
 
 
-def getYear(inDate):
-  return inDate.year
-
-def getMonth(inDate):
-  return inDate.month
-
-def getWeekday(inDate):
-  return inDate.weekday
-
 def getWeekendDay(inDate):
   if (inDate.weekday == 'Saturday') or (inDate.weekday == 'Sunday'):
     return True
@@ -282,7 +273,7 @@ def getModifiedDataframe(inDataframe):
 
   # 04 - dateWeekday
   outDataframe.insert(3, "dateWeekday", outDataframe['date'], allow_duplicates=True)
-  outDataframe.dateWeekday = outDataframe['dateWeekday'].dt.weekday_name
+  outDataframe.dateWeekday = outDataframe['dateWeekday'].dt.day_name
 
   # 05 - dateWeekendDay
   outDataframe.insert(4, "dateWeekendDay", outDataframe['date'], allow_duplicates=True)
