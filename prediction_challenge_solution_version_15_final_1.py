@@ -100,8 +100,6 @@ import pandas as pd
 import xgboost as xgb
 import sys as sys
 import csv, datetime
-import seaborn as sns
-import matplotlib.pyplot as plt
 from datetime import datetime
 from scipy.stats import uniform, randint
 from sklearn.compose import ColumnTransformer
@@ -138,7 +136,6 @@ x_rscv_n_iter = 20
 # Create some new features based on the given features
 # or enrich the dataset with features from datasets.
 
-sns.countplot(data=original_dataset,x="success")
 
 def getYear(inDate):
   return inDate.year
@@ -427,8 +424,6 @@ dataset = getModifiedDataframe(original_dataset)
 dataset = getModifiedTrainingSet(dataset, original_dataset['success'])
 dataset_prediction = getModifiedDataframe(original_dataset_prediction)
 dataset_prediction = dataset_prediction[getFeatureList()]
-
-sns.countplot(data=dataset,x="success")
 
 """## Model, Pipeline and Scoring Initialization"""
 
