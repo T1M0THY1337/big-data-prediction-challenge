@@ -424,6 +424,4 @@ matriculation_number = '467429'
 submission.to_csv(
     f'./{test_score_f1:.2f}-submission-{matriculation_number}.csv', index_label='identifier')
 
-test_score_f1 = 0.00234
-
 print(datetime.now(), f" [4/4] Ende Python Script - {test_score_f1:.2f}")
